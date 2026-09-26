@@ -1,0 +1,1775 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Detective: Data Latih & Bias Arena - Al Azhar Tech</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            emerald: '#10b981',
+                            cyan: '#06b6d4',
+                            amber: '#f59e0b',
+                            indigo: '#6366f1',
+                            rose: '#f43f5e'
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 3s ease-in-out infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-6px)' },
+                        },
+                        glow: {
+                            '0%': { boxShadow: '0 0 5px rgba(16, 185, 129, 0.2)' },
+                            '100%': { boxShadow: '0 0 20px rgba(16, 185, 129, 0.6)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            touch-action: manipulation;
+        }
+        
+        .font-serif-cert {
+            font-family: 'Cinzel', serif;
+        }
+
+        .touch-btn {
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .touch-btn:active {
+            transform: scale(0.94) translateY(2px);
+        }
+
+        /* Gamified Child-Friendly 3D Pop Effect */
+        .btn-game-emerald {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            box-shadow: 0 5px 0 #047857, 0 8px 18px rgba(16, 185, 129, 0.3);
+        }
+        .btn-game-emerald:active {
+            box-shadow: 0 2px 0 #047857;
+        }
+        .btn-game-amber {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            box-shadow: 0 5px 0 #b45309, 0 8px 18px rgba(245, 158, 11, 0.3);
+        }
+        .btn-game-amber:active {
+            box-shadow: 0 2px 0 #b45309;
+        }
+        .btn-game-indigo {
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            box-shadow: 0 5px 0 #3730a3, 0 8px 18px rgba(99, 102, 241, 0.3);
+        }
+        .btn-game-indigo:active {
+            box-shadow: 0 2px 0 #3730a3;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+
+        /* Certificate Pattern BG */
+        .cert-border-frame {
+            background-color: #fffef0;
+            background-image: radial-gradient(#f59e0b 1.5px, transparent 1.5px), radial-gradient(#06b6d4 1.5px, #fffef0 1.5px);
+            background-size: 24px 24px;
+            background-position: 0 0, 12px 12px;
+        }
+
+        .cert-a4-container {
+            width: 100%;
+            max-width: 920px;
+            aspect-ratio: 297 / 210;
+        }
+
+        .drag-item {
+            cursor: grab;
+            user-select: none;
+        }
+        .drag-item:active {
+            cursor: grabbing;
+        }
+        .drop-target-active {
+            border-color: #f59e0b !important;
+            background-color: rgba(245, 158, 11, 0.15) !important;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-emerald-500 selection:text-slate-900">
+
+    <!-- HEADER BAR -->
+    <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b-2 border-indigo-500/30 px-4 py-3 md:px-8 shadow-lg">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+            
+            <!-- BRANDING -->
+            <div class="flex items-center gap-3">
+                <div class="bg-gradient-to-br from-amber-400 via-emerald-400 to-cyan-400 text-slate-950 font-black px-4 py-2 rounded-2xl text-lg tracking-wider shadow-lg shadow-emerald-500/20 flex items-center gap-2 transform hover:scale-105 transition-transform">
+                    <span class="text-xl">🚀</span> AL AZHAR TECH
+                </div>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-amber-300 to-cyan-300 tracking-wide">
+                        AI DETECTIVE: Data Latih & Bias Arena
+                    </h1>
+                    <p class="text-amber-300/80 text-xs font-semibold hidden sm:block">🌟 Petualangan Interaktif Koding & Etika Kecerdasan Artifisial (SMP Fase D)</p>
+                </div>
+            </div>
+
+            <!-- ACTION CONTROLS -->
+            <div class="flex items-center gap-2 md:gap-3 flex-wrap">
+                <!-- AUDIO SFX TOGGLE -->
+                <button id="btn-sound" onclick="toggleSound()" class="touch-btn bg-slate-800 hover:bg-slate-700 border-2 border-slate-700 text-slate-200 px-3 py-2 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-2 shadow-sm" title="Toggle Sound Effects">
+                    <span id="sound-icon" class="text-base">🔊</span>
+                    <span class="hidden md:inline font-bold">Suara</span>
+                </button>
+
+                <!-- GUIDE BUTTON -->
+                <button onclick="showGuideModal()" class="touch-btn btn-game-indigo text-white font-extrabold px-4 py-2 rounded-2xl text-xs sm:text-sm flex items-center gap-1.5">
+                    <span>💡</span> Panduan
+                </button>
+
+                <!-- MATERI ETIKA AI BUTTON -->
+                <button onclick="showAdabModal()" class="touch-btn btn-game-amber text-slate-950 font-black px-4 py-2 rounded-2xl flex items-center gap-2 text-xs sm:text-sm">
+                    <span>📚</span> Adab & Etika
+                </button>
+
+                <!-- CASE SELECTOR DROPDOWN -->
+                <div class="relative">
+                    <select id="case-selector" onchange="changeCase(this.value)" class="bg-slate-800 border-2 border-amber-400/80 text-amber-300 font-extrabold px-3 py-2 rounded-2xl text-xs sm:text-sm focus:outline-none focus:border-amber-300 cursor-pointer shadow-md">
+                        <option value="trash">Case 1: 🍂 Pemilah Sampah Organik</option>
+                        <option value="fruit">Case 2: 🍎 Buah Matang vs Mentah</option>
+                        <option value="pet">Case 3: 🐈 Biometrik Kucing Hitam/Putih</option>
+                    </select>
+                </div>
+
+                <!-- KUIS REFLEKSI ETIKA BUTTON -->
+                <button onclick="showAdabQuiz()" class="touch-btn btn-game-emerald text-white font-black px-4 py-2 rounded-2xl flex items-center gap-1.5 text-xs sm:text-sm">
+                    <span>✍️</span> Kuis Etika
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN WORKSPACE CONTAINER -->
+    <main class="max-w-7xl w-full mx-auto p-4 md:p-6 flex-grow flex flex-col gap-6">
+
+        <!-- BRIEFING BANNER -->
+        <section class="bg-gradient-to-r from-indigo-950 via-slate-900 to-purple-950 border-2 border-indigo-500/40 rounded-3xl p-5 md:p-6 flex flex-wrap items-center justify-between gap-4 shadow-2xl relative overflow-hidden">
+            <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <div class="flex items-center gap-4">
+                <div class="text-5xl bg-gradient-to-br from-indigo-500/30 to-purple-500/30 p-4 rounded-3xl border-2 border-indigo-400/40 shadow-inner animate-bounce">🕵️‍♂️</div>
+                <div>
+                    <div class="flex items-center gap-2 mb-1.5">
+                        <span id="case-badge" class="bg-amber-400 text-slate-950 text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">Misi Detektif #1</span>
+                        <span id="case-topic" class="text-xs text-indigo-300 font-extrabold bg-indigo-900/60 px-2.5 py-0.5 rounded-full border border-indigo-500/30">Klasifikasi Sampah Kering</span>
+                    </div>
+                    <h2 id="case-title" class="text-lg md:text-xl font-black text-white tracking-wide">Laporan Kasus: AI Mengalami Halusinasi & Bias Terhadap Daun Cokelat Kering!</h2>
+                    <p id="case-description" class="text-slate-200 text-xs sm:text-sm mt-1 max-w-3xl leading-relaxed">
+                        Sistem AI sekolah salah mengelompokkan <b>Daun Cokelat Kering</b> sebagai <b>Sampah Plastik</b> dengan keyakinan 98%! Temukan penyebabnya pada Data Latih dan perbaiki agar sistem kembali adil dan akurat.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- QUICK STATS -->
+            <div class="flex items-center gap-3 bg-slate-950/80 border-2 border-indigo-500/30 p-3.5 rounded-2xl shadow-lg">
+                <div class="text-center px-3">
+                    <p class="text-[10px] text-indigo-300 uppercase font-black tracking-wider">Tingkat Bias</p>
+                    <p id="stat-bias" class="text-lg font-black text-rose-400">TINGGI (100%)</p>
+                </div>
+                <div class="h-8 w-0.5 bg-indigo-800"></div>
+                <div class="text-center px-3">
+                    <p class="text-[10px] text-emerald-300 uppercase font-black tracking-wider">Skor Keadilan</p>
+                    <p id="stat-fairness" class="text-lg font-black text-amber-300">30 / 100</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3-PANEL INTERACTIVE ARENA -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            <!-- PANEL 1: UJI AWAL & DIAGNOSIS BIAS AI -->
+            <section class="bg-slate-900/90 border-2 border-indigo-500/40 rounded-3xl p-5 sm:p-6 flex flex-col justify-between shadow-2xl">
+                <div>
+                    <!-- PANEL HEADER -->
+                    <div class="flex items-center justify-between gap-2 mb-4">
+                        <span class="bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-extrabold text-xs px-3 py-1 rounded-full uppercase tracking-wider">
+                            Tahap 1: Diagnosis
+                        </span>
+                        <span id="badge-status-1" class="text-xs bg-rose-500/20 text-rose-300 border border-rose-500/30 px-2.5 py-1 rounded-full font-bold flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span> AI Belum Stabil
+                        </span>
+                    </div>
+
+                    <!-- TITLE & INSTRUCTION -->
+                    <h3 class="text-lg font-black text-white mb-2 flex items-center gap-2">
+                        <span>🔍</span> Uji Sampel Bermasalah
+                    </h3>
+                    <p class="text-slate-300 text-xs mb-4 leading-relaxed">
+                        Cek kemampuan AI mengenali objek. Lihat bagaimana AI bisa salah menebak karena data latih belum seimbang!
+                    </p>
+
+                    <!-- SAMPLE CARD -->
+                    <div id="sample-card" class="bg-slate-950 border-2 border-slate-800 rounded-2xl p-4 text-center mb-4 relative">
+                        <div id="sample-emoji" class="text-6xl mb-2 animate-float">🍂</div>
+                        <p id="sample-name" class="font-bold text-white text-sm">Sampel: Daun Kering Cokelat</p>
+                        <span id="sample-true-class" class="inline-block text-[11px] text-emerald-400 font-semibold mt-1 bg-emerald-950/60 border border-emerald-500/30 px-2.5 py-0.5 rounded-full">
+                            Kategori Sebenarnya: Sampah Organik
+                        </span>
+                    </div>
+
+                    <!-- CANVA DIAGRAM NN -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-3 mb-4">
+                        <div class="flex justify-between items-center mb-2 px-1">
+                            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">🧠 Visual Jaringan Saraf AI</span>
+                            <span id="nn-status" class="text-[10px] text-rose-400 font-mono">Bias Terdeteksi!</span>
+                        </div>
+                        <canvas id="nn-canvas" width="280" height="100" class="w-full h-24 bg-slate-900 rounded-xl"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <!-- AI RESULT BOX -->
+                    <div id="ai-result-box" class="bg-slate-950 border-2 border-rose-500/40 rounded-2xl p-3.5 mb-3 text-center">
+                        <p class="text-[10px] text-slate-400 uppercase tracking-wider mb-1 font-bold">Hasil Prediksi Model AI Saat Ini:</p>
+                        <p id="ai-output-text" class="text-xl sm:text-2xl font-black text-rose-400">⚠️ SAMPAH PLASTIK (98%)</p>
+                        <p id="ai-output-sub" class="text-xs text-rose-300 mt-1 font-bold">❌ HALUSINASI & BIAS AI TERDETEKSI!</p>
+                    </div>
+
+                    <button onclick="testInitialAI()" class="touch-btn btn-game-indigo w-full text-white font-black py-3.5 rounded-2xl text-xs sm:text-sm transition-all flex items-center justify-center gap-2">
+                        <span>🔎</span> Uji Ulang Deteksi AI
+                    </button>
+                </div>
+            </section>
+
+            <!-- PANEL 2: ARENA PERBAIKAN & BALANCING DATA LATIH -->
+            <section class="bg-slate-900/90 border-2 border-emerald-500/40 rounded-3xl p-5 sm:p-6 flex flex-col justify-between shadow-2xl">
+                <div>
+                    <!-- PANEL HEADER -->
+                    <div class="flex items-center justify-between gap-2 mb-4">
+                        <span class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-extrabold text-xs px-3 py-1 rounded-full uppercase tracking-wider">
+                            Tahap 2: Perbaiki Data
+                        </span>
+                        <span id="data-balance-indicator" class="text-xs bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2.5 py-1 rounded-full font-bold">
+                            Data Bias (3 vs 0)
+                        </span>
+                    </div>
+
+                    <!-- TITLE & INSTRUCTION -->
+                    <h3 class="text-lg font-black text-white mb-2 flex items-center gap-2">
+                        <span>⚖️</span> Studio Keseimbangan Dataset
+                    </h3>
+                    <p class="text-slate-300 text-xs mb-4 leading-relaxed">
+                        Tambahkan variasi data latih agar model belajar secara adil (<b>'Adl</b>) dan akurat.
+                    </p>
+
+                    <!-- GAUGES CONTAINER -->
+                    <div class="space-y-3 mb-4 bg-slate-950 p-3.5 rounded-2xl border border-slate-800">
+                        <!-- CLASS A -->
+                        <div>
+                            <div class="flex justify-between text-xs mb-1">
+                                <span id="label-class-a" class="text-emerald-400 font-bold">Daun Hijau Segar:</span>
+                                <span id="count-class-a" class="text-emerald-300 font-black">3 Sampel</span>
+                            </div>
+                            <div class="w-full bg-slate-900 h-2.5 rounded-full overflow-hidden p-0.5 border border-slate-800">
+                                <div id="bar-class-a" class="bg-emerald-500 h-full w-full rounded-full transition-all duration-300"></div>
+                            </div>
+                        </div>
+
+                        <!-- CLASS B -->
+                        <div>
+                            <div class="flex justify-between text-xs mb-1">
+                                <span id="label-class-b" class="text-amber-300 font-bold">Daun Cokelat Kering:</span>
+                                <span id="count-class-b" class="text-amber-300 font-black">0 Sampel</span>
+                            </div>
+                            <div class="w-full bg-slate-900 h-2.5 rounded-full overflow-hidden p-0.5 border border-slate-800">
+                                <div id="bar-class-b" class="bg-amber-400 h-full w-0 transition-all duration-500 rounded-full"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- VISUAL DATASET BUCKET -->
+                    <div class="mb-4">
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">📦 Kotak Data Latih Baru:</span>
+                            <span class="text-[10px] text-amber-300/80 font-bold">Butuh Min. 3 Sampel</span>
+                        </div>
+                        <div id="dataset-drawer" class="bg-slate-950 border border-slate-800 rounded-2xl p-3 min-h-[64px] flex flex-wrap gap-2 items-center justify-start">
+                            <span id="drawer-empty-msg" class="text-xs text-slate-500 italic mx-auto">Dataset masih kosong. Klik tombol di bawah untuk menambah data!</span>
+                        </div>
+                    </div>
+
+                    <!-- ACTION BUTTONS -->
+                    <div class="grid grid-cols-2 gap-2.5 mb-3">
+                        <button onclick="addSampleData()" class="touch-btn bg-slate-800 hover:bg-slate-700 border-2 border-amber-400/60 text-amber-300 p-3 rounded-2xl text-center shadow-md active:scale-95 transition-all">
+                            <span id="btn-add-icon" class="text-xl block mb-0.5">🍂</span>
+                            <span id="btn-add-label" class="text-[11px] sm:text-xs font-black block">+ Tambah Sampel</span>
+                        </button>
+                        <button onclick="resetData()" class="touch-btn bg-slate-800 hover:bg-slate-700 border-2 border-slate-700 text-slate-300 p-3 rounded-2xl text-center shadow-md active:scale-95 transition-all">
+                            <span class="text-xl block mb-0.5">🔄</span>
+                            <span class="text-[11px] sm:text-xs font-bold block">Reset Data</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- RETRAIN BUTTON AREA -->
+                <div>
+                    <!-- TRAINING PROGRESS BAR -->
+                    <div id="training-progress-container" class="hidden mb-3">
+                        <div class="flex justify-between text-xs text-cyan-400 font-mono mb-1">
+                            <span>Melatih Model (Epoch <span id="epoch-num">0</span>/20)...</span>
+                            <span id="loss-num">Loss: 0.85</span>
+                        </div>
+                        <div class="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden border border-slate-800">
+                            <div id="epoch-progress" class="bg-gradient-to-r from-cyan-400 to-emerald-400 h-full w-0 transition-all duration-100"></div>
+                        </div>
+                    </div>
+
+                    <button id="btn-retrain" onclick="retrainModel()" disabled class="touch-btn w-full bg-slate-800 text-slate-500 font-black py-3.5 rounded-2xl text-xs sm:text-sm transition-all shadow-lg cursor-not-allowed border-2 border-slate-700 flex items-center justify-center gap-2">
+                        <span>🚀</span> Latih Ulang AI (Retrain Model)
+                    </button>
+                </div>
+            </section>
+
+            <!-- PANEL 3: VERIFIKASI AKHIR & ADAB VERIFICATION -->
+            <section class="bg-slate-900/90 border-2 border-cyan-500/40 rounded-3xl p-5 sm:p-6 flex flex-col justify-between shadow-2xl">
+                <div>
+                    <!-- PANEL HEADER -->
+                    <div class="flex items-center justify-between gap-2 mb-4">
+                        <span class="bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 font-extrabold text-xs px-3 py-1 rounded-full uppercase tracking-wider">
+                            Tahap 3: Tabayyun
+                        </span>
+                        <span id="badge-status-3" class="text-xs bg-slate-800 text-slate-400 border border-slate-700 px-2.5 py-1 rounded-full font-bold">
+                            Menunggu Retraining
+                        </span>
+                    </div>
+
+                    <!-- TITLE & INSTRUCTION -->
+                    <h3 class="text-lg font-black text-white mb-2 flex items-center gap-2">
+                        <span>🏆</span> Hasil Investigasi AI
+                    </h3>
+                    <p class="text-slate-300 text-xs mb-4 leading-relaxed">
+                        Evaluasi performa model setelah data latih dibersihkan dan dipastikan adil.
+                    </p>
+
+                    <!-- FINAL RESULT DISPLAY CARD -->
+                    <div id="final-result-card" class="bg-slate-950 border-2 border-slate-800 rounded-2xl p-4 sm:p-5 text-center mb-3 min-h-[160px] flex flex-col justify-center items-center transition-all">
+                        <div id="final-icon" class="text-5xl mb-2 opacity-40">🤖</div>
+                        <p id="final-status-title" class="text-sm sm:text-base font-bold text-slate-400">Model Belum Diperbaiki</p>
+                        <p id="final-status-desc" class="text-xs text-slate-500 mt-1 max-w-xs">
+                            Tambahkan minimal 3 sampel baru di Tahap 2 lalu tekan 'Latih Ulang AI' untuk menguji verifikasi Tabayyun.
+                        </p>
+                    </div>
+
+                    <!-- STRESS TEST TRIGGER -->
+                    <div id="stress-test-box" class="hidden bg-slate-950 border border-slate-800 rounded-2xl p-3 mb-3">
+                        <p class="text-[11px] font-bold text-cyan-300 mb-2 flex items-center gap-1">
+                            <span>🧪</span> Uji Ketahanan Tambahan (Tabayyun Stress-Test):
+                        </p>
+                        <div id="stress-test-buttons" class="flex gap-2">
+                            <!-- DYNAMICALLY GENERATED PER CASE -->
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <!-- REWARD BADGE & CERTIFICATE TRIGGER -->
+                    <div id="badge-reward" class="hidden bg-gradient-to-r from-amber-500/20 via-emerald-500/20 to-cyan-500/20 border-2 border-emerald-400/50 rounded-2xl p-3.5 text-center mb-3 animate-pulse-slow">
+                        <p class="text-amber-300 font-black text-[10px] tracking-wider uppercase mb-0.5">🎖️ LENCANA DETEKTIF DITERIMA!</p>
+                        <p id="reward-badge-title" class="text-emerald-300 font-black text-sm sm:text-base">Master AI Detective: Penyelamat Bias</p>
+                        <p class="text-[11px] text-slate-300 mt-0.5">Anda berhasil menerapkan prinsip 'Adl & Tabayyun pada AI!</p>
+                    </div>
+
+                    <button id="btn-cert" onclick="showCertModal()" class="hidden touch-btn btn-game-amber w-full text-slate-950 font-black py-3.5 rounded-2xl text-xs sm:text-sm transition-all flex items-center justify-center gap-2 shadow-lg">
+                        <span>📜</span> Tampilkan Sertifikat Digital
+                    </button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- MODAL 1: PANDUAN INVESTIGASI DETEKTIF AI -->
+    <div id="guide-modal" class="hidden fixed inset-0 bg-slate-950/90 backdrop-blur-md flex justify-center items-center p-4 z-50">
+        <div class="bg-slate-900 border-2 border-indigo-500/60 rounded-3xl max-w-2xl w-full p-6 md:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <button onclick="hideGuideModal()" class="absolute top-5 right-5 text-slate-400 hover:text-white text-xl font-bold w-9 h-9 rounded-full bg-slate-800 flex items-center justify-center z-10 border border-slate-700">✕</button>
+
+            <div class="flex items-center gap-3 mb-5 border-b border-slate-800 pb-4">
+                <span class="text-3xl">💡</span>
+                <div>
+                    <h3 class="text-xl font-black text-indigo-300">Panduan Detektif AI</h3>
+                    <p class="text-xs text-slate-400">Langkah-langkah Membasmi Bias & Halusinasi AI</p>
+                </div>
+            </div>
+
+            <div class="space-y-4 text-xs sm:text-sm text-slate-300">
+                <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 flex items-start gap-3">
+                    <span class="bg-indigo-500/20 text-indigo-300 font-black px-3 py-1 rounded-xl text-xs shrink-0">Tahap 1</span>
+                    <div>
+                        <p class="font-extrabold text-slate-100">Uji Sampel Bermasalah (Diagnosis Bias)</p>
+                        <p class="text-slate-400 text-xs mt-0.5">Tekan tombol 'Uji Ulang Deteksi AI' untuk melihat bagaimana model mengalami halusinasi karena kekurangan variasi data latih.</p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 flex items-start gap-3">
+                    <span class="bg-emerald-500/20 text-emerald-300 font-black px-3 py-1 rounded-xl text-xs shrink-0">Tahap 2</span>
+                    <div>
+                        <p class="font-extrabold text-slate-100">Pembersihan & Seimbangkan Data ('Adl)</p>
+                        <p class="text-slate-400 text-xs mt-0.5">Tambahkan minimal 3 sampel baru ke dalam studio keseimbangan dataset agar model AI belajar secara adil dan tidak memihak.</p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 flex items-start gap-3">
+                    <span class="bg-cyan-500/20 text-cyan-300 font-black px-3 py-1 rounded-xl text-xs shrink-0">Tahap 3</span>
+                    <div>
+                        <p class="font-extrabold text-slate-100">Retrain Model & Stress-Test Tabayyun</p>
+                        <p class="text-slate-400 text-xs mt-0.5">Tekan 'Latih Ulang AI', lalu uji ketahanan model dengan sampel tak terduga untuk memverifikasi keakuratannya.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 text-center">
+                <button onclick="hideGuideModal()" class="touch-btn btn-game-indigo text-white font-black px-8 py-3 rounded-2xl text-xs sm:text-sm">
+                    Saya Siap Menginvestigasi! 🕵️‍♂️
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: MATERI ADAB & ETIKA AI ISLAM -->
+    <div id="adab-modal" class="hidden fixed inset-0 bg-slate-950/90 backdrop-blur-md flex justify-center items-center p-4 z-50">
+        <div class="bg-slate-900 border-2 border-amber-400/60 rounded-3xl max-w-2xl w-full p-6 md:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <button onclick="hideAdabModal()" class="absolute top-5 right-5 text-slate-400 hover:text-white text-xl font-bold w-9 h-9 rounded-full bg-slate-800 flex items-center justify-center z-10 border border-slate-700">✕</button>
+
+            <div class="flex items-center gap-3 mb-5 border-b border-slate-800 pb-4">
+                <span class="text-3xl">📚</span>
+                <div>
+                    <h3 class="text-xl font-black text-amber-300">Adab & Etika AI Islam</h3>
+                    <p class="text-xs text-slate-400">Nilai Karakter Al Azhar dalam Pengembangan & Penggunaan AI</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs sm:text-sm">
+                <div class="bg-slate-950 p-4 rounded-2xl border border-amber-500/30">
+                    <div class="flex items-center gap-2 mb-1.5">
+                        <span class="text-xl">🎯</span>
+                        <h4 class="font-black text-amber-300">Siddiq (Kejujuran Data)</h4>
+                    </div>
+                    <p class="text-slate-300 text-xs leading-relaxed">Data latih harus otentik dan akurat. Mengubah atau memanipulasi label data untuk memalsukan hasil AI melanggar nilai kejujuran.</p>
+                </div>
+
+                <div class="bg-slate-950 p-4 rounded-2xl border border-emerald-500/30">
+                    <div class="flex items-center gap-2 mb-1.5">
+                        <span class="text-xl">⚖️</span>
+                        <h4 class="font-black text-emerald-300">'Adl (Keadilan & Bebas Bias)</h4>
+                    </div>
+                    <p class="text-slate-300 text-xs leading-relaxed">Dataset harus mencakup semua variasi secara adil. AI tidak boleh merugikan kelompok atau jenis data tertentu karena ketidakseimbangan latih.</p>
+                </div>
+
+                <div class="bg-slate-950 p-4 rounded-2xl border border-cyan-500/30">
+                    <div class="flex items-center gap-2 mb-1.5">
+                        <span class="text-xl">🔍</span>
+                        <h4 class="font-black text-cyan-300">Tabayyun (Verifikasi Kritis)</h4>
+                    </div>
+                    <p class="text-slate-300 text-xs leading-relaxed">Jangan menelan mentah-mentah jawaban AI. Setiap informasi hasil kecerdasan buatan wajib diperiksa kembali kebenaran dan kesesuaiannya.</p>
+                </div>
+
+                <div class="bg-slate-950 p-4 rounded-2xl border border-indigo-500/30">
+                    <div class="flex items-center gap-2 mb-1.5">
+                        <span class="text-xl">🤲</span>
+                        <h4 class="font-black text-indigo-300">Amanah & Maslahat</h4>
+                    </div>
+                    <p class="text-slate-300 text-xs leading-relaxed">AI adalah alat ciptaan manusia yang harus dimanfaatkan untuk kebaikan lingkungan, pendidikan, dan kemaslahatan ummat.</p>
+                </div>
+            </div>
+
+            <div class="mt-6 text-center">
+                <button onclick="hideAdabModal()" class="touch-btn btn-game-amber text-slate-950 font-black px-8 py-3 rounded-2xl text-xs sm:text-sm">
+                    Pahami & Lanjutkan 🌟
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 3: KUIS REFLEKSI ETIKA AI INTERAKTIF (5 SOAL VARIATIF) -->
+    <div id="quiz-modal" class="hidden fixed inset-0 bg-slate-950/90 backdrop-blur-md flex justify-center items-center p-4 z-50">
+        <div class="bg-slate-900 border-2 border-amber-400/60 rounded-3xl max-w-2xl w-full p-5 md:p-7 shadow-2xl relative max-h-[94vh] overflow-y-auto">
+            <button onclick="hideAdabQuiz()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl font-bold w-9 h-9 rounded-full bg-slate-800 flex items-center justify-center z-10 border border-slate-700">✕</button>
+
+            <!-- QUIZ HEADER & STEPPER -->
+            <div id="quiz-header-area" class="flex items-center justify-between gap-3 mb-3">
+                <div class="flex items-center gap-2">
+                    <span class="text-3xl">✍️</span>
+                    <div>
+                        <h3 class="text-lg sm:text-xl font-black text-amber-300">Kuis Refleksi Etika AI</h3>
+                        <p class="text-xs text-slate-400">Soal Pilihan Ganda, Drag & Drop, dan Menjodohkan</p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <span id="quiz-step-badge" class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-mono font-bold px-3 py-1 rounded-full">
+                        Soal 1 / 5
+                    </span>
+                </div>
+            </div>
+
+            <!-- PROGRESS BAR -->
+            <div id="quiz-progress-container" class="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden mb-4 border border-slate-800">
+                <div id="quiz-progress-bar" class="bg-gradient-to-r from-amber-400 via-emerald-400 to-cyan-400 h-full w-1/5 transition-all duration-300"></div>
+            </div>
+
+            <!-- QUESTION CARD CONTAINER -->
+            <div id="quiz-card-container">
+                <!-- DYNAMICALLY RENDERED QUESTION / RESULT SUMMARY -->
+            </div>
+
+            <!-- FEEDBACK AREA FOR QUESTION -->
+            <div id="quiz-feedback" class="hidden text-center p-3.5 mt-3 rounded-xl font-bold text-xs sm:text-sm transition-all"></div>
+
+            <!-- NAVIGATION BUTTONS FOOTER -->
+            <div id="quiz-nav-footer" class="flex items-center justify-between gap-3 mt-5 pt-3 border-t border-slate-800">
+                <button id="quiz-btn-prev" onclick="prevQuizQuestion()" class="touch-btn bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold px-4 py-2.5 rounded-2xl text-xs sm:text-sm flex items-center gap-1.5 disabled:opacity-40 disabled:cursor-not-allowed">
+                    ⬅️ Sebelumnya
+                </button>
+                <button id="quiz-btn-next" onclick="nextQuizQuestion()" class="touch-btn btn-game-emerald text-slate-950 font-black px-6 py-2.5 rounded-2xl text-xs sm:text-sm flex items-center gap-1.5">
+                    Selanjutnya ➡️
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 4: SERTIFIKAT DETEKTIF AI DIGITAL (RAMAH ANAK & CERIA) -->
+    <div id="cert-modal" class="hidden fixed inset-0 bg-slate-950/90 backdrop-blur-md flex justify-center items-center p-4 z-50 overflow-y-auto">
+        <div class="bg-slate-900 border-4 border-amber-400 rounded-3xl max-w-4xl w-full p-4 md:p-6 shadow-2xl relative text-center my-auto">
+            <button onclick="hideCertModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl font-bold w-9 h-9 rounded-full bg-slate-800 flex items-center justify-center z-10 border border-slate-700">✕</button>
+
+            <!-- INPUT NAMA MURID -->
+            <div class="mb-3 bg-slate-950 border-2 border-amber-400/60 p-3 rounded-2xl max-w-md mx-auto flex flex-col sm:flex-row items-center gap-2">
+                <label for="student-name-input" class="text-xs font-black text-amber-300 shrink-0">⭐ Nama Murid Detektif:</label>
+                <input type="text" id="student-name-input" oninput="updateCertName(this.value)" placeholder="Ketik Nama Lengkap..." value="Bintang Detektif Al Azhar" class="w-full bg-slate-900 border-2 border-slate-700 text-amber-300 font-black px-3 py-1.5 rounded-xl text-sm focus:outline-none focus:border-amber-400 text-center">
+            </div>
+
+            <!-- CERTIFICATE DISPLAY AREA -->
+            <div id="cert-printable" class="cert-border-frame cert-a4-container border-[8px] border-amber-400 rounded-3xl p-5 sm:p-7 relative overflow-hidden shadow-2xl text-slate-900 mx-auto my-1 flex flex-col justify-between text-left">
+                
+                <!-- BACKGROUND DECORATIVE WATERMARK -->
+                <div class="absolute inset-0 flex items-center justify-center opacity-[0.04] pointer-events-none select-none">
+                    <span class="text-[200px] font-black">🌟</span>
+                </div>
+
+                <!-- CORNER PLAYFUL EMOJI STICKERS -->
+                <div class="absolute top-3 left-4 text-3xl animate-bounce">🚀</div>
+                <div class="absolute top-3 right-4 text-3xl animate-bounce">🎈</div>
+                <div class="absolute bottom-3 left-4 text-3xl">🎨</div>
+                <div class="absolute bottom-3 right-4 text-3xl">🏆</div>
+
+                <!-- INSTITUTION HEADER -->
+                <div class="text-center relative z-10 mb-1">
+                    <div class="inline-block bg-gradient-to-r from-amber-400 via-emerald-400 to-cyan-400 text-slate-950 font-black text-xs sm:text-sm px-6 py-1.5 rounded-full uppercase tracking-wider shadow-md border-2 border-white">
+                        🌈 AL AZHAR TECH • LAB AI DETEKTIF CILIK 🚀
+                    </div>
+                    <h2 class="text-2xl sm:text-4xl font-black text-indigo-950 uppercase tracking-wide font-serif-cert mt-2 text-shadow-sm">
+                        🎖️ SERTIFIKAT HEBAT DETEKTIF AI 🎖️
+                    </h2>
+                    <p class="text-xs sm:text-sm font-extrabold text-amber-700 tracking-wider uppercase mt-0.5">
+                        Misi Pintar Data Latih & Bebas Bias
+                    </p>
+                    <div class="w-36 h-1.5 bg-gradient-to-r from-amber-400 via-emerald-400 to-cyan-400 rounded-full mx-auto mt-1.5"></div>
+                </div>
+
+                <!-- CITATION INTRO -->
+                <p class="text-center text-xs sm:text-sm text-slate-700 font-bold my-1">
+                    Sertifikat Penghargaan Resmi Diberikan Kepada Murid Hebat:
+                </p>
+
+                <!-- RECIPIENT NAME DISPLAYED BEAUTIFULLY -->
+                <div class="text-center my-1.5 bg-amber-100/80 border-2 border-dashed border-amber-400 py-2 px-4 rounded-2xl max-w-lg mx-auto shadow-sm">
+                    <h3 id="cert-name-display" class="font-serif-cert font-black text-2xl sm:text-3xl text-indigo-900 tracking-wider">
+                        Bintang Detektif Al Azhar
+                    </h3>
+                </div>
+
+                <!-- CITATION / ACHIEVEMENT DETAILS -->
+                <div class="bg-white/90 border-2 border-emerald-300 rounded-2xl p-3 max-w-xl mx-auto my-1 shadow-sm relative z-10">
+                    <p class="text-xs sm:text-sm text-slate-800 font-bold leading-relaxed text-center">
+                        🎉 Selamat! Kamu telah sukses membasmi <b>Bias & Halusinasi AI</b>, mempraktikkan sikap adil <b>'Adl</b>, serta lulus uji kritis <b>Tabayyun</b> dengan sangat baik! 🌟
+                    </p>
+                </div>
+
+                <!-- CERTIFICATE METRICS & BADGES -->
+                <div class="grid grid-cols-3 gap-2.5 max-w-lg mx-auto my-1 text-center text-xs font-bold">
+                    <div class="bg-gradient-to-br from-amber-200 to-yellow-100 border-2 border-amber-400 p-2 rounded-2xl text-amber-950 shadow-sm">
+                        <span class="block text-[10px] text-amber-800 uppercase font-black">Nilai Adab & Etika</span>
+                        <span id="cert-score-display" class="text-base font-black text-amber-900">100 / 100 🌟</span>
+                    </div>
+                    <div class="bg-gradient-to-br from-emerald-200 to-teal-100 border-2 border-emerald-400 p-2 rounded-2xl text-emerald-950 shadow-sm">
+                        <span class="block text-[10px] text-emerald-800 uppercase font-black">Status Model</span>
+                        <span class="text-base font-black text-emerald-900">✅ Bebas Bias</span>
+                    </div>
+                    <div class="bg-gradient-to-br from-cyan-200 to-blue-100 border-2 border-cyan-400 p-2 rounded-2xl text-indigo-950 shadow-sm">
+                        <span class="block text-[10px] text-indigo-800 uppercase font-black">Level Detektif</span>
+                        <span class="text-base font-black text-indigo-900">⭐ Master AI</span>
+                    </div>
+                </div>
+
+                <!-- FOOTER, SIGNATURES & STAMPS -->
+                <div class="flex items-end justify-between gap-4 pt-2 mt-1 border-t-2 border-amber-300 text-xs relative z-10">
+                    
+                    <!-- ID CODE -->
+                    <div class="flex items-center gap-2">
+                        <div class="w-11 h-11 bg-amber-300 border-2 border-amber-500 rounded-2xl flex items-center justify-center text-xl shadow-sm">
+                            🏁
+                        </div>
+                        <div>
+                            <p class="text-[9px] text-slate-600 font-mono font-bold">No. Sertifikat:</p>
+                            <p id="cert-id-display" class="font-mono font-black text-indigo-950 text-xs">AZ-AIDETECTIVE-2026-X89B</p>
+                            <p id="cert-date-display" class="text-[9px] text-slate-600 font-bold mt-0.5">Tanggal: 26 September 2026</p>
+                        </div>
+                    </div>
+
+                    <!-- GOLDEN EMBLEM STAMP -->
+                    <div class="flex flex-col items-center">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-200 border-3 border-amber-500 flex items-center justify-center text-slate-950 shadow-md text-2xl font-black animate-pulse">
+                            👑
+                        </div>
+                        <span class="text-[9px] font-black text-amber-900 uppercase tracking-wider mt-1">JUARA ETIKA AI</span>
+                    </div>
+
+                    <!-- SIGNATURE BLOCK -->
+                    <div class="text-center">
+                        <div class="h-6 flex items-center justify-center font-bold text-indigo-900 italic text-sm">
+                            Guru AI Al Azhar 🌟
+                        </div>
+                        <div class="w-28 h-0.5 bg-slate-800 mx-auto"></div>
+                        <p class="font-black text-slate-900 text-[11px] mt-0.5">Tim Pengembang AI</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ACTION BUTTON -->
+            <div class="mt-4 flex justify-center">
+                <button onclick="hideCertModal()" class="touch-btn btn-game-emerald text-slate-950 font-black px-8 py-3 rounded-2xl text-sm transition-all shadow-lg active:scale-95">
+                    Tutup Sertifikat 🌟
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT APP LOGIC -->
+    <script>
+        // APP STATE
+        let currentCaseKey = 'trash';
+        let sampleCount = 0;
+        const requiredCount = 3;
+        let isRetrained = false;
+        let isSoundOn = true;
+
+        // QUIZ STATE
+        let currentQuizIndex = 0;
+        let isQuizFinished = false;
+        let userQuizScore = 0;
+
+        // QUIZ ANSWERS STATE (FOR 5 QUESTIONS)
+        let quizState = {
+            q1: null, // Multiple Choice (index)
+            q2: {},   // Drag & Drop: { targetId: itemId }
+            q3: {},   // Matching: { leftId: rightId }
+            q4: {},   // Drag & Drop / Classification: { categoryId: [itemIds] }
+            q5: null  // Multiple Choice (index)
+        };
+
+        // TEMP DRAG / CLICK SELECTION HELPER
+        let activeSelectedMatchLeft = null;
+        let activeSelectedDragItem = null;
+
+        // 5 QUIZ QUESTIONS DEFINITION
+        const QUIZ_QUESTIONS = [
+            {
+                type: 'mcq',
+                title: 'Soal 1: Pilihan Ganda',
+                q: "1. Mengapa model AI bisa mengalami halusinasi dan bias saat mengklasifikasi objek?",
+                options: [
+                    "Karena komputer mengalami konsleting listrik.",
+                    "Karena data latih tidak seimbang dan tidak memiliki variasi sampel yang cukup.",
+                    "Karena AI sudah terlalu pintar melebihi penciptanya.",
+                    "Karena resolusi kamera yang digunakan kurang mahal."
+                ],
+                correct: 1,
+                explanation: "Tepat! AI belajar dari data latih. Jika data latih hanya berisi daun hijau segar, AI akan bingung dan bias saat melihat daun cokelat kering!"
+            },
+            {
+                type: 'drag_drop',
+                title: 'Soal 2: Drag & Drop / Pasangkan Konsep',
+                q: "2. Tarik atau Klik kata prinsip etika di bawah, lalu masukkan ke dalam kotak definisi yang tepat!",
+                items: [
+                    { id: 'item_siddiq', label: '🎯 Siddiq', color: 'bg-amber-500/20 text-amber-300 border-amber-500/40' },
+                    { id: 'item_adl', label: "⚖️ 'Adl", color: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' },
+                    { id: 'item_tabayyun', label: '🔍 Tabayyun', color: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40' }
+                ],
+                targets: [
+                    { id: 'target_siddiq', title: "A. Data latih otentik, jujur, & tidak dipalsukan", correctItem: 'item_siddiq' },
+                    { id: 'target_adl', title: "B. Variasi dataset seimbang & adil bagi semua sampel", correctItem: 'item_adl' },
+                    { id: 'target_tabayyun', title: "C. Mengecek & memverifikasi ulang hasil prediksi AI", correctItem: 'item_tabayyun' }
+                ],
+                explanation: "Luar biasa! Siddiq = Kejujuran Data, 'Adl = Keadilan Dataset, dan Tabayyun = Verifikasi Kritis Hasil AI."
+            },
+            {
+                type: 'matching',
+                title: 'Soal 3: Menjodohkan Pasangan',
+                q: "3. Jodohkan Aksi Pengembang AI (Kiri) dengan Dampak Etika yang Sesuai (Kanan)! Klik item kiri lalu klik pasangan kanannya.",
+                pairsLeft: [
+                    { id: 'L1', text: '1. Menambah variasi sampel daun cokelat ke dataset' },
+                    { id: 'L2', text: '2. Memalsukan label data agar terlihat akurat' },
+                    { id: 'L3', text: '3. Memeriksa ulang prediksi AI sebelum mengambil keputusan' }
+                ],
+                pairsRight: [
+                    { id: 'R_siddiq', text: 'A. Melanggar prinsip Siddiq (Kejujuran Data)', correctLeft: 'L2' },
+                    { id: 'R_adl', text: "B. Memenuhi prinsip 'Adl (Keadilan Dataset)", correctLeft: 'L1' },
+                    { id: 'R_tabayyun', text: 'C. Menerapkan prinsip Tabayyun (Verifikasi Kritis)', correctLeft: 'L3' }
+                ],
+                explanation: "Hebat! Menambah variasi mewujudkan Keadilan ('Adl), memalsukan data merusak Kejujuran (Siddiq), dan mengecek ulang adalah Tabayyun!"
+            },
+            {
+                type: 'drag_category',
+                title: 'Soal 4: Klasifikasi Tindakan Etis vs Tidak Etis',
+                q: "4. Kelompokkan pernyataan di bawah ini ke dalam wadah 'Tindakan Etis' atau 'Tindakan Ber-Bias / Melanggar'!",
+                items: [
+                    { id: 'c1', text: "Mengecek ulang laporan berita buatan AI", targetCategory: 'cat_etis' },
+                    { id: 'c2', text: "Hanya memakai foto kucing putih dalam dataset", targetCategory: 'cat_bias' },
+                    { id: 'c3', text: "Mengubah label data secara diam-diam", targetCategory: 'cat_bias' },
+                    { id: 'c4', text: "Memberi contoh gambar dari berbagai pencahayaan", targetCategory: 'cat_etis' }
+                ],
+                categories: [
+                    { id: 'cat_etis', title: "✅ Tindakan Etis ('Adl & Tabayyun)", color: 'border-emerald-500/50 bg-emerald-950/30 text-emerald-300' },
+                    { id: 'cat_bias', title: "⚠️ Tindakan Ber-Bias / Melanggar", color: 'border-rose-500/50 bg-rose-950/30 text-rose-300' }
+                ],
+                explanation: "Sangat baik! Memeriksa ulang & memberikan variasi sampel adalah tindakan etis, sedangkan manipulasi & data sepihak memicu bias."
+            },
+            {
+                type: 'mcq',
+                title: 'Soal 5: Pilihan Ganda Studi Kasus',
+                q: "5. Ketika AI di sekolah salah mendeteksi Daun Kering sebagai Plastik, tindakan Tabayyun yang paling bijak adalah...",
+                options: [
+                    "Langsung mempercayai AI dan membuang daun ke tempat sampah plastik.",
+                    "Marah pada mesin AI dan mematikan seluruh jaringan listrik sekolah.",
+                    "Melakukan investigasi data latih, menambah sampel daun kering, dan meretrain model AI.",
+                    "Menyalahkan teman sekelas yang sedang piket."
+                ],
+                correct: 2,
+                explanation: "Sangat tepat! Sikap Tabayyun mendorong kita mencari penyebab masalah secara bijak dengan memperbaiki data latih dan melatih ulang AI!"
+            }
+        ];
+
+        // CASE DATA DEFINITION
+        const CASE_DATA = {
+            trash: {
+                badge: "Misi Detektif #1",
+                topic: "Klasifikasi Sampah Kering",
+                title: "Laporan Kasus: AI Mengalami Halusinasi & Bias Terhadap Daun Cokelat Kering!",
+                desc: "Sistem AI sekolah salah mengelompokkan <b>Daun Cokelat Kering</b> sebagai <b>Sampah Plastik</b> dengan keyakinan 98%! Temukan penyebabnya pada Data Latih.",
+                emoji: "🍂",
+                sampleName: "Sampel: Daun Kering Cokelat",
+                trueClass: "Kategori Sebenarnya: Sampah Organik",
+                initialOutput: "⚠️ SAMPAH PLASTIK (98%)",
+                initialSub: "❌ HALUSINASI & BIAS AI TERDETEKSI!",
+                labelA: "Daun Hijau Segar:",
+                countA: "3 Sampel",
+                labelB: "Daun Cokelat Kering:",
+                addBtnIcon: "🍂",
+                addBtnLabel: "+ Tambah Daun Cokelat",
+                correctOutput: "🍂 SAMPAH ORGANIK (99%)",
+                correctSub: "✓ KLASIFIKASI AKURAT & ADIL ('ADL)",
+                itemEmoji: "🍂",
+                badgeTitle: "Master AI Detective: Penyelamat Bias Sampah",
+                stressTests: [
+                    { label: "🍂 Daun Basah", emoji: "🍂💧", output: "SAMPAH ORGANIK (96%)", desc: "Uji Tabayyun Sukses: Daun Basah Tetap Dikenali Organik!" },
+                    { label: "🍃 Daun Bercak", emoji: "🍃", output: "SAMPAH ORGANIK (98%)", desc: "Uji Tabayyun Sukses: Daun Bercak Berhasil Diklasifikasi!" }
+                ]
+            },
+            fruit: {
+                badge: "Misi Detektif #2",
+                topic: "Deteksi Kematangan Buah",
+                title: "Laporan Kasus: AI Selalu Menolak Apel Hijau Manis Matang!",
+                desc: "Kamera pemilah buah mengira semua <b>Apel Hijau</b> adalah <b>Buah Mentah / Masam</b> padahal ini jenis Apel Malang Matang! Tambahkan sampel ke data latih.",
+                emoji: "🍏",
+                sampleName: "Sampel: Apel Hijau Malang Matang",
+                trueClass: "Kategori Sebenarnya: Buah Matang & Manis",
+                initialOutput: "⚠️ BUAH MENTAH/MASAM (95%)",
+                initialSub: "❌ BIAS WARNA HIJAU TERDETEKSI!",
+                labelA: "Apel Merah Matang:",
+                countA: "3 Sampel",
+                labelB: "Apel Hijau Matang:",
+                addBtnIcon: "🍏",
+                addBtnLabel: "+ Tambah Apel Hijau",
+                correctOutput: "🍏 BUAH MATANG MANIS (98%)",
+                correctSub: "✓ KLASIFIKASI BEBAS BIAS WARNA!",
+                itemEmoji: "🍏",
+                badgeTitle: "Master AI Detective: Penyelamat Bias Buah",
+                stressTests: [
+                    { label: "🍏 Apel Hijau Kecil", emoji: "🍏", output: "BUAH MATANG MANIS (96%)", desc: "Uji Tabayyun Sukses: Ukuran Berbeda Tetap Dideteksi Matang!" },
+                    { label: "🍏 Gradasi Merah-Hijau", emoji: "🍏", output: "BUAH MATANG MANIS (99%)", desc: "Uji Tabayyun Sukses: Gradasi Warna Apel Tetap Akurat!" }
+                ]
+            },
+            pet: {
+                badge: "Misi Detektif #3",
+                topic: "Biometrik Hewan Peliharaan",
+                title: "Laporan Kasus: AI Gagal Mengenali Kucing Hitam Pada Malam Hari!",
+                desc: "Pintu otomatis hewan gagal mendeteksi <b>Kucing Bulu Hitam</b> dan menduganya sebagai <b>Bayangan Benda Mati</b>! Mari perbaiki keadilan dataset.",
+                emoji: "🐈‍⬛",
+                sampleName: "Sampel: Kucing Hitam Peliharaan",
+                trueClass: "Kategori Sebenarnya: Kucing Peliharaan",
+                initialOutput: "⚠️ BAYANGAN BENDA MATI (96%)",
+                initialSub: "❌ BIAS PIGMEN & PENCAHAYAAN!",
+                labelA: "Kucing Putih / Oranye:",
+                countA: "3 Sampel",
+                labelB: "Kucing Bulu Hitam:",
+                addBtnIcon: "🐈‍⬛",
+                addBtnLabel: "+ Tambah Kucing Hitam",
+                correctOutput: "🐈‍⬛ KUCING PELIHARAAN (99%)",
+                correctSub: "✓ DETEKSI BIOMETRIK ADIL & PRESISI!",
+                itemEmoji: "🐈‍⬛",
+                badgeTitle: "Master AI Detective: Penyelamat Bias Biometrik",
+                stressTests: [
+                    { label: "🐈‍⬛ Cahaya Redup", emoji: "🐈‍⬛🌙", output: "KUCING PELIHARAAN (95%)", desc: "Uji Tabayyun Sukses: Tetap Dikenali Dalam Pencahayaan Minim!" },
+                    { label: "🐈‍⬛ Kucing Meringkuk", emoji: "🐈‍⬛", output: "KUCING PELIHARAAN (98%)", desc: "Uji Tabayyun Sukses: Berbagai Posisi Kucing Dideteksi Presisi!" }
+                ]
+            }
+        };
+
+        // WEB AUDIO SYNTHESIZER
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+
+        function playSound(type) {
+            if (!isSoundOn) return;
+            try {
+                if (!audioCtx) audioCtx = new AudioCtx();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                const now = audioCtx.currentTime;
+
+                if (type === 'click') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(400, now);
+                    osc.frequency.exponentialRampToValueAtTime(800, now + 0.08);
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+                    osc.start(now);
+                    osc.stop(now + 0.08);
+                } else if (type === 'add') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(300, now);
+                    osc.frequency.setValueAtTime(500, now + 0.05);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+                    osc.start(now);
+                    osc.stop(now + 0.15);
+                } else if (type === 'error') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(180, now);
+                    osc.frequency.setValueAtTime(140, now + 0.1);
+                    gain.gain.setValueAtTime(0.25, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+                    osc.start(now);
+                    osc.stop(now + 0.25);
+                } else if (type === 'success') {
+                    const freqs = [523.25, 659.25, 783.99, 1046.50];
+                    freqs.forEach((freq, idx) => {
+                        const o = audioCtx.createOscillator();
+                        const g = audioCtx.createGain();
+                        o.connect(g);
+                        g.connect(audioCtx.destination);
+                        o.type = 'sine';
+                        o.frequency.setValueAtTime(freq, now + idx * 0.08);
+                        g.gain.setValueAtTime(0.15, now + idx * 0.08);
+                        g.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.3);
+                        o.start(now + idx * 0.08);
+                        o.stop(now + idx * 0.08 + 0.3);
+                    });
+                }
+            } catch (e) {
+                console.log("Audio play error:", e);
+            }
+        }
+
+        function toggleSound() {
+            isSoundOn = !isSoundOn;
+            document.getElementById('sound-icon').innerText = isSoundOn ? "🔊" : "🔇";
+            playSound('click');
+        }
+
+        // CANVAS NEURAL NET VISUALIZER
+        function drawNNCanvas(biasHigh = true) {
+            const canvas = document.getElementById('nn-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+
+            ctx.clearRect(0, 0, w, h);
+
+            const layer1 = [{x: 40, y: 25}, {x: 40, y: 50}, {x: 40, y: 75}];
+            const layer2 = [{x: 140, y: 30}, {x: 140, y: 70}];
+            const layer3 = [{x: 240, y: 35}, {x: 240, y: 65}];
+
+            layer1.forEach(n1 => {
+                layer2.forEach(n2 => {
+                    ctx.beginPath();
+                    ctx.moveTo(n1.x, n1.y);
+                    ctx.lineTo(n2.x, n2.y);
+                    ctx.strokeStyle = biasHigh ? 'rgba(244, 63, 94, 0.25)' : 'rgba(16, 185, 129, 0.25)';
+                    ctx.lineWidth = biasHigh ? 1 : 1.5;
+                    ctx.stroke();
+                });
+            });
+
+            layer2.forEach(n2 => {
+                layer3.forEach((n3, idx) => {
+                    ctx.beginPath();
+                    ctx.moveTo(n2.x, n2.y);
+                    ctx.lineTo(n3.x, n3.y);
+                    if (biasHigh && idx === 0) {
+                        ctx.strokeStyle = 'rgba(244, 63, 94, 0.8)';
+                        ctx.lineWidth = 3;
+                    } else if (!biasHigh && idx === 1) {
+                        ctx.strokeStyle = 'rgba(16, 185, 129, 0.8)';
+                        ctx.lineWidth = 3;
+                    } else {
+                        ctx.strokeStyle = 'rgba(100, 116, 139, 0.2)';
+                        ctx.lineWidth = 1;
+                    }
+                    ctx.stroke();
+                });
+            });
+
+            const drawNodes = (nodes, color) => {
+                nodes.forEach(n => {
+                    ctx.beginPath();
+                    ctx.arc(n.x, n.y, 6, 0, Math.PI * 2);
+                    ctx.fillStyle = color;
+                    ctx.fill();
+                    ctx.strokeStyle = '#0f172a';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                });
+            };
+
+            drawNodes(layer1, '#6366f1');
+            drawNodes(layer2, '#06b6d4');
+            drawNodes(layer3, biasHigh ? '#f43f5e' : '#10b981');
+        }
+
+        // CHANGE CASE
+        function changeCase(caseKey) {
+            playSound('click');
+            currentCaseKey = caseKey;
+            const data = CASE_DATA[caseKey];
+
+            document.getElementById('case-badge').innerText = data.badge;
+            document.getElementById('case-topic').innerText = data.topic;
+            document.getElementById('case-title').innerText = data.title;
+            document.getElementById('case-description').innerHTML = data.desc;
+
+            document.getElementById('sample-emoji').innerText = data.emoji;
+            document.getElementById('sample-name').innerText = data.sampleName;
+            document.getElementById('sample-true-class').innerText = data.trueClass;
+
+            document.getElementById('label-class-a').innerText = data.labelA;
+            document.getElementById('count-class-a').innerText = data.countA;
+            document.getElementById('label-class-b').innerText = data.labelB;
+
+            document.getElementById('btn-add-icon').innerText = data.addBtnIcon;
+            document.getElementById('btn-add-label').innerText = data.addBtnLabel;
+
+            renderStressTestButtons();
+            resetData();
+        }
+
+        // RENDER STRESS TEST BUTTONS
+        function renderStressTestButtons() {
+            const container = document.getElementById('stress-test-buttons');
+            if (!container) return;
+            const data = CASE_DATA[currentCaseKey];
+            container.innerHTML = data.stressTests.map((st, idx) => `
+                <button onclick="testStressSample(${idx})" class="touch-btn text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3 py-2 rounded-lg flex-1 font-semibold truncate">
+                    ${st.label}
+                </button>
+            `).join('');
+        }
+
+        // TEST INITIAL AI
+        function testInitialAI() {
+            playSound('error');
+            const data = CASE_DATA[currentCaseKey];
+            const outputText = document.getElementById('ai-output-text');
+            const outputSub = document.getElementById('ai-output-sub');
+
+            outputText.innerText = data.initialOutput;
+            outputSub.innerText = data.initialSub;
+            outputText.className = "text-2xl font-black text-rose-400 animate-bounce";
+
+            drawNNCanvas(true);
+
+            setTimeout(() => {
+                outputText.className = "text-2xl font-black text-rose-400";
+            }, 1000);
+        }
+
+        // ADD SAMPLE DATA
+        function addSampleData() {
+            if (sampleCount < 5) {
+                sampleCount++;
+                playSound('add');
+                updateDatasetUI();
+            } else {
+                playSound('click');
+            }
+        }
+
+        // RESET DATASET
+        function resetData() {
+            sampleCount = 0;
+            isRetrained = false;
+            playSound('click');
+            updateDatasetUI();
+
+            const data = CASE_DATA[currentCaseKey];
+
+            document.getElementById('ai-output-text').innerText = data.initialOutput;
+            document.getElementById('ai-output-sub').innerText = data.initialSub;
+            document.getElementById('ai-output-text').className = "text-2xl font-black text-rose-400";
+            document.getElementById('nn-status').innerText = "Bias Terdeteksi!";
+            document.getElementById('nn-status').className = "text-[10px] text-rose-400 font-mono";
+            drawNNCanvas(true);
+
+            const finalCard = document.getElementById('final-result-card');
+            if (finalCard) {
+                finalCard.innerHTML = `
+                    <div id="final-icon" class="text-5xl mb-2 opacity-40">🤖</div>
+                    <p id="final-status-title" class="text-base font-bold text-slate-400">Model Belum Diperbaiki</p>
+                    <p id="final-status-desc" class="text-xs text-slate-500 mt-1 max-w-xs">
+                        Tambahkan minimal 3 sampel baru di Tahap 2 lalu tekan 'Latih Ulang AI'.
+                    </p>
+                `;
+            }
+            
+            document.getElementById('badge-reward').classList.add('hidden');
+            document.getElementById('btn-cert').classList.add('hidden');
+            document.getElementById('stress-test-box').classList.add('hidden');
+
+            document.getElementById('badge-status-3').innerText = "Menunggu Retraining";
+            document.getElementById('badge-status-3').className = "text-xs bg-slate-800 text-slate-400 border border-slate-700 px-2.5 py-1 rounded-full font-bold";
+
+            document.getElementById('stat-bias').innerText = "TINGGI (100%)";
+            document.getElementById('stat-bias').className = "text-lg font-black text-rose-400";
+            document.getElementById('stat-fairness').innerText = "30 / 100";
+            document.getElementById('stat-fairness').className = "text-lg font-black text-amber-400";
+        }
+
+        // UPDATE DATASET UI
+        function updateDatasetUI() {
+            const data = CASE_DATA[currentCaseKey];
+            document.getElementById('count-class-b').innerText = `${sampleCount} Sampel`;
+
+            const percentage = Math.min((sampleCount / requiredCount) * 100, 100);
+            document.getElementById('bar-class-b').style.width = `${percentage}%`;
+
+            const indicator = document.getElementById('data-balance-indicator');
+            const btnRetrain = document.getElementById('btn-retrain');
+            const drawer = document.getElementById('dataset-drawer');
+
+            drawer.innerHTML = '';
+            if (sampleCount === 0) {
+                drawer.innerHTML = '<span id="drawer-empty-msg" class="text-xs text-slate-600 italic mx-auto">Dataset masih kosong. Klik tombol di bawah untuk menambah data!</span>';
+            } else {
+                for (let i = 0; i < sampleCount; i++) {
+                    const item = document.createElement('span');
+                    item.className = "bg-slate-900 border border-amber-500/40 text-lg px-2.5 py-1 rounded-xl animate-bounce";
+                    item.innerText = data.itemEmoji;
+                    drawer.appendChild(item);
+                }
+            }
+
+            if (sampleCount >= requiredCount) {
+                indicator.innerText = `Data Seimbang & Adil (3 vs ${sampleCount})`;
+                indicator.className = "text-xs bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2.5 py-1 rounded-full font-bold";
+                btnRetrain.disabled = false;
+                btnRetrain.className = "touch-btn w-full bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-slate-950 font-black py-3.5 rounded-xl text-base transition-all shadow-lg shadow-emerald-500/20 active:scale-95 animate-pulse-slow border-none cursor-pointer";
+            } else {
+                indicator.innerText = `Data Bias (3 vs ${sampleCount})`;
+                indicator.className = "text-xs bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2.5 py-1 rounded-full font-bold";
+                btnRetrain.disabled = true;
+                btnRetrain.className = "touch-btn w-full bg-slate-800 text-slate-500 font-extrabold py-3.5 rounded-xl text-base transition-all shadow-lg cursor-not-allowed border border-slate-700 flex items-center justify-center gap-2";
+            }
+        }
+
+        // RETRAIN MODEL SIMULATION
+        function retrainModel() {
+            playSound('click');
+            const card = document.getElementById('final-result-card');
+            const progressContainer = document.getElementById('training-progress-container');
+            const progressBar = document.getElementById('epoch-progress');
+            const epochNum = document.getElementById('epoch-num');
+            const lossNum = document.getElementById('loss-num');
+            const btnRetrain = document.getElementById('btn-retrain');
+
+            btnRetrain.disabled = true;
+            progressContainer.classList.remove('hidden');
+
+            card.innerHTML = `
+                <div class="animate-spin text-4xl mb-2">⚙️</div>
+                <p class="text-sm font-extrabold text-cyan-300">Melatih Ulang Mesin AI...</p>
+                <p class="text-xs text-slate-400 mt-1">Memproses Data Latih Baru secara Siddiq & Adil ('Adl)</p>
+            `;
+
+            let epoch = 0;
+            const interval = setInterval(() => {
+                epoch++;
+                epochNum.innerText = epoch;
+                const progressPct = (epoch / 20) * 100;
+                progressBar.style.width = `${progressPct}%`;
+
+                const currentLoss = (0.95 - (epoch * 0.042)).toFixed(2);
+                lossNum.innerText = `Loss: ${Math.max(currentLoss, 0.05)}`;
+
+                if (epoch % 4 === 0) playSound('add');
+
+                if (epoch >= 20) {
+                    clearInterval(interval);
+                    completeRetraining();
+                }
+            }, 100);
+        }
+
+        function completeRetraining() {
+            isRetrained = true;
+            playSound('success');
+
+            const data = CASE_DATA[currentCaseKey];
+            const card = document.getElementById('final-result-card');
+            const progressContainer = document.getElementById('training-progress-container');
+
+            progressContainer.classList.add('hidden');
+
+            card.innerHTML = `
+                <div class="text-6xl mb-2 animate-bounce">${data.emoji}</div>
+                <p class="text-xl font-black text-emerald-400 tracking-wide">${data.correctOutput}</p>
+                <p class="text-xs text-emerald-300 font-bold mt-1">${data.correctSub}</p>
+            `;
+
+            renderStressTestButtons();
+
+            document.getElementById('reward-badge-title').innerText = data.badgeTitle;
+            document.getElementById('badge-reward').classList.remove('hidden');
+            document.getElementById('btn-cert').classList.remove('hidden');
+            document.getElementById('stress-test-box').classList.remove('hidden');
+
+            document.getElementById('badge-status-3').innerText = "AI Stabil & Adil";
+            document.getElementById('badge-status-3').className = "text-xs bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2.5 py-1 rounded-full font-bold";
+
+            document.getElementById('nn-status').innerText = "Model Bebas Bias!";
+            document.getElementById('nn-status').className = "text-[10px] text-emerald-400 font-mono";
+            drawNNCanvas(false);
+
+            document.getElementById('stat-bias').innerText = "BEBAS BIAS (0%)";
+            document.getElementById('stat-bias').className = "text-lg font-black text-emerald-400";
+            document.getElementById('stat-fairness').innerText = "100 / 100";
+            document.getElementById('stat-fairness').className = "text-lg font-black text-emerald-400";
+        }
+
+        // STRESS TEST
+        function testStressSample(index) {
+            playSound('click');
+            const card = document.getElementById('final-result-card');
+            const st = CASE_DATA[currentCaseKey].stressTests[index];
+            if (st) {
+                card.innerHTML = `
+                    <div class="text-5xl mb-2">${st.emoji}</div>
+                    <p class="text-lg font-extrabold text-emerald-400">${st.output}</p>
+                    <p class="text-xs text-slate-300 mt-1">${st.desc}</p>
+                `;
+            }
+        }
+
+        // ===================================================================
+        // INTERACTIVE KUIS ETIKA (5 SOAL VARIATIF + EVALUASI SKOR)
+        // ===================================================================
+        function showAdabQuiz() {
+            playSound('click');
+            currentQuizIndex = 0;
+            isQuizFinished = false;
+            activeSelectedMatchLeft = null;
+            activeSelectedDragItem = null;
+            renderQuizCard();
+            document.getElementById('quiz-modal').classList.remove('hidden');
+        }
+
+        function hideAdabQuiz() {
+            playSound('click');
+            document.getElementById('quiz-modal').classList.add('hidden');
+        }
+
+        function resetQuizState() {
+            quizState = {
+                q1: null,
+                q2: {},
+                q3: {},
+                q4: {},
+                q5: null
+            };
+            currentQuizIndex = 0;
+            isQuizFinished = false;
+            activeSelectedMatchLeft = null;
+            activeSelectedDragItem = null;
+        }
+
+        function renderQuizCard() {
+            const container = document.getElementById('quiz-card-container');
+            const stepBadge = document.getElementById('quiz-step-badge');
+            const progressBar = document.getElementById('quiz-progress-bar');
+            const btnPrev = document.getElementById('quiz-btn-prev');
+            const btnNext = document.getElementById('quiz-btn-next');
+            const feedbackBox = document.getElementById('quiz-feedback');
+            const footerNav = document.getElementById('quiz-nav-footer');
+
+            feedbackBox.className = "hidden";
+            footerNav.classList.remove('hidden');
+
+            if (isQuizFinished) {
+                renderQuizSummaryResult();
+                return;
+            }
+
+            const qData = QUIZ_QUESTIONS[currentQuizIndex];
+            stepBadge.innerText = `Soal ${currentQuizIndex + 1} / 5`;
+            progressBar.style.width = `${((currentQuizIndex + 1) / 5) * 100}%`;
+
+            btnPrev.disabled = currentQuizIndex === 0;
+
+            if (currentQuizIndex === QUIZ_QUESTIONS.length - 1) {
+                btnNext.innerHTML = '🏁 Selesaikan Kuis';
+            } else {
+                btnNext.innerHTML = 'Selanjutnya ➡️';
+            }
+
+            if (qData.type === 'mcq') {
+                renderMCQ(qData, container);
+            } else if (qData.type === 'drag_drop') {
+                renderDragDrop(qData, container);
+            } else if (qData.type === 'matching') {
+                renderMatching(qData, container);
+            } else if (qData.type === 'drag_category') {
+                renderDragCategory(qData, container);
+            }
+        }
+
+        // RENDER QUESTION TYPE 1 & 5: MULTIPLE CHOICE (MCQ)
+        function renderMCQ(qData, container) {
+            const stateKey = currentQuizIndex === 0 ? 'q1' : 'q5';
+            const selectedOpt = quizState[stateKey];
+
+            let optionsHTML = qData.options.map((opt, idx) => {
+                const isSelected = selectedOpt === idx;
+                let btnStyle = "bg-slate-950 border-slate-800 text-slate-300 hover:border-amber-400/50";
+                if (isSelected) {
+                    btnStyle = "bg-amber-500/20 border-amber-400 text-amber-300 font-extrabold shadow-md";
+                }
+
+                return `
+                    <button onclick="selectMCQOption('${stateKey}', ${idx})" class="w-full text-left p-3.5 rounded-2xl border-2 ${btnStyle} transition-all text-xs sm:text-sm font-semibold flex items-center justify-between gap-2">
+                        <span>${opt}</span>
+                        ${isSelected ? '<span class="text-amber-300">📌</span>' : ''}
+                    </button>
+                `;
+            }).join('');
+
+            container.innerHTML = `
+                <div class="bg-slate-950/80 border-2 border-slate-800 p-4 sm:p-5 rounded-2xl mb-2">
+                    <span class="text-[11px] font-black uppercase text-amber-400 tracking-wider block mb-1">${qData.title}</span>
+                    <h4 class="text-sm sm:text-base font-black text-white mb-3 leading-relaxed">${qData.q}</h4>
+                    <div class="space-y-2.5">
+                        ${optionsHTML}
+                    </div>
+                </div>
+            `;
+        }
+
+        function selectMCQOption(stateKey, optIdx) {
+            playSound('click');
+            quizState[stateKey] = optIdx;
+            renderQuizCard();
+        }
+
+        // RENDER QUESTION TYPE 2: DRAG & DROP
+        function renderDragDrop(qData, container) {
+            const currentAssignments = quizState.q2 || {};
+
+            let itemsHTML = qData.items.map(item => {
+                const isAssigned = Object.values(currentAssignments).includes(item.id);
+                const isSelected = activeSelectedDragItem === item.id;
+                
+                if (isAssigned) {
+                    return `
+                        <div class="p-2.5 rounded-xl border border-slate-800 bg-slate-900/40 text-slate-600 text-xs font-bold text-center line-through opacity-50">
+                            ${item.label} (Sudah Ditempatkan)
+                        </div>
+                    `;
+                }
+
+                return `
+                    <div onclick="clickSelectDragItem('${item.id}')" class="p-3 rounded-xl border-2 ${item.color} ${isSelected ? 'ring-2 ring-amber-400 animate-pulse scale-105' : 'hover:scale-102'} touch-btn cursor-pointer text-xs font-black text-center shadow-md">
+                        ${item.label} ${isSelected ? '👈 (Siap Ditempatkan)' : ''}
+                    </div>
+                `;
+            }).join('');
+
+            let targetsHTML = qData.targets.map(target => {
+                const assignedItemId = currentAssignments[target.id];
+                const assignedItem = qData.items.find(i => i.id === assignedItemId);
+
+                return `
+                    <div onclick="clickPlaceDragTarget('${target.id}')" class="bg-slate-950 border-2 border-dashed ${assignedItem ? 'border-emerald-500/60 bg-emerald-950/20' : 'border-slate-700 hover:border-amber-400/60'} p-3.5 rounded-2xl transition-all cursor-pointer">
+                        <p class="text-xs font-bold text-slate-300 mb-2">${target.title}</p>
+                        <div class="min-h-[42px] flex items-center justify-center border border-slate-800 bg-slate-900/80 rounded-xl p-2">
+                            ${assignedItem ? `
+                                <div class="w-full flex items-center justify-between gap-2 px-2">
+                                    <span class="text-xs font-black text-emerald-300">${assignedItem.label}</span>
+                                    <button onclick="event.stopPropagation(); removeDragAssignment('${target.id}')" class="text-xs text-rose-400 hover:text-rose-200 font-bold px-1.5 py-0.5 rounded bg-rose-950 border border-rose-800">Hapus ✕</button>
+                                </div>
+                            ` : `<span class="text-[11px] text-slate-500 italic">Klik item di atas lalu klik kotak ini untuk memasukkan...</span>`}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = `
+                <div class="bg-slate-950/80 border-2 border-slate-800 p-4 rounded-2xl mb-2">
+                    <span class="text-[11px] font-black uppercase text-amber-400 tracking-wider block mb-1">${qData.title}</span>
+                    <h4 class="text-xs sm:text-sm font-black text-white mb-3 leading-relaxed">${qData.q}</h4>
+                    
+                    <!-- AVAILABLE DRAG ITEMS -->
+                    <div class="mb-4">
+                        <p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-2">Pilihan Prinsip Etika:</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                            ${itemsHTML}
+                        </div>
+                    </div>
+
+                    <!-- DROP TARGETS -->
+                    <div class="space-y-2.5">
+                        <p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-1">Kotak Definisi Etika:</p>
+                        ${targetsHTML}
+                    </div>
+                </div>
+            `;
+        }
+
+        function clickSelectDragItem(itemId) {
+            playSound('click');
+            activeSelectedDragItem = activeSelectedDragItem === itemId ? null : itemId;
+            renderQuizCard();
+        }
+
+        function clickPlaceDragTarget(targetId) {
+            if (!activeSelectedDragItem) return;
+            playSound('add');
+            quizState.q2[targetId] = activeSelectedDragItem;
+            activeSelectedDragItem = null;
+            renderQuizCard();
+        }
+
+        function removeDragAssignment(targetId) {
+            playSound('click');
+            delete quizState.q2[targetId];
+            renderQuizCard();
+        }
+
+        // RENDER QUESTION TYPE 3: MENJODOHKAN (MATCHING)
+        function renderMatching(qData, container) {
+            const currentMatches = quizState.q3 || {};
+
+            let leftHTML = qData.pairsLeft.map(l => {
+                const isMatched = currentMatches[l.id] !== undefined;
+                const isSelected = activeSelectedMatchLeft === l.id;
+
+                let style = "bg-slate-900 border-slate-700 text-slate-300";
+                if (isSelected) {
+                    style = "bg-amber-500/20 border-amber-400 text-amber-300 font-black ring-2 ring-amber-400";
+                } else if (isMatched) {
+                    style = "bg-indigo-950/60 border-indigo-500 text-indigo-300 font-extrabold";
+                }
+
+                return `
+                    <button onclick="clickSelectMatchLeft('${l.id}')" class="w-full text-left p-3 rounded-xl border-2 ${style} touch-btn text-xs font-semibold flex items-center justify-between gap-2">
+                        <span>${l.text}</span>
+                        ${isMatched ? '<span class="text-xs bg-indigo-900 text-indigo-200 px-1.5 py-0.5 rounded border border-indigo-500">Terjodohkan</span>' : (isSelected ? '<span>👈</span>' : '')}
+                    </button>
+                `;
+            }).join('');
+
+            let rightHTML = qData.pairsRight.map(r => {
+                // Find if any left item matched to this right item
+                const matchedLeftId = Object.keys(currentMatches).find(leftId => currentMatches[leftId] === r.id);
+                const matchedLeft = qData.pairsLeft.find(l => l.id === matchedLeftId);
+
+                let style = "bg-slate-900 border-slate-700 text-slate-300";
+                if (matchedLeft) {
+                    style = "bg-emerald-950/60 border-emerald-500 text-emerald-300 font-extrabold";
+                }
+
+                return `
+                    <button onclick="clickSelectMatchRight('${r.id}')" class="w-full text-left p-3 rounded-xl border-2 ${style} touch-btn text-xs font-semibold flex flex-col gap-1">
+                        <span>${r.text}</span>
+                        ${matchedLeft ? `
+                            <span class="text-[10px] text-emerald-400 font-bold bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800 inline-block self-start">
+                                🔗 Pasangan: ${matchedLeft.text.substring(0, 25)}...
+                            </span>
+                        ` : ''}
+                    </button>
+                `;
+            }).join('');
+
+            container.innerHTML = `
+                <div class="bg-slate-950/80 border-2 border-slate-800 p-4 rounded-2xl mb-2">
+                    <span class="text-[11px] font-black uppercase text-amber-400 tracking-wider block mb-1">${qData.title}</span>
+                    <h4 class="text-xs sm:text-sm font-black text-white mb-3 leading-relaxed">${qData.q}</h4>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- LEFT COLUMN -->
+                        <div class="space-y-2">
+                            <p class="text-[10px] font-extrabold text-indigo-300 uppercase tracking-wider">Aksi Pengembang AI (Kiri):</p>
+                            ${leftHTML}
+                        </div>
+
+                        <!-- RIGHT COLUMN -->
+                        <div class="space-y-2">
+                            <p class="text-[10px] font-extrabold text-emerald-300 uppercase tracking-wider">Dampak Etika (Kanan):</p>
+                            ${rightHTML}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function clickSelectMatchLeft(leftId) {
+            playSound('click');
+            activeSelectedMatchLeft = activeSelectedMatchLeft === leftId ? null : leftId;
+            renderQuizCard();
+        }
+
+        function clickSelectMatchRight(rightId) {
+            if (!activeSelectedMatchLeft) {
+                // If user clicks right without left selected, check if we can unmatch
+                const matchedLeftId = Object.keys(quizState.q3).find(leftId => quizState.q3[leftId] === rightId);
+                if (matchedLeftId) {
+                    playSound('click');
+                    delete quizState.q3[matchedLeftId];
+                    renderQuizCard();
+                }
+                return;
+            }
+
+            playSound('add');
+            quizState.q3[activeSelectedMatchLeft] = rightId;
+            activeSelectedMatchLeft = null;
+            renderQuizCard();
+        }
+
+        // RENDER QUESTION TYPE 4: DRAG CATEGORY / CLASSIFICATION
+        function renderDragCategory(qData, container) {
+            const currentAssignments = quizState.q4 || {};
+
+            let unassignedItemsHTML = qData.items.map(item => {
+                const assignedCategory = Object.keys(currentAssignments).find(catId => (currentAssignments[catId] || []).includes(item.id));
+                if (assignedCategory) return '';
+
+                const isSelected = activeSelectedDragItem === item.id;
+
+                return `
+                    <button onclick="clickSelectCategoryItem('${item.id}')" class="p-2.5 rounded-xl border-2 ${isSelected ? 'border-amber-400 bg-amber-500/20 text-amber-300 font-black ring-2 ring-amber-400' : 'border-slate-700 bg-slate-900 text-slate-200'} touch-btn text-xs font-bold text-left shadow-md">
+                        📌 ${item.text} ${isSelected ? '(Siap Masuk Wadah)' : ''}
+                    </button>
+                `;
+            }).join('');
+
+            let categoriesHTML = qData.categories.map(cat => {
+                const assignedItemIds = currentAssignments[cat.id] || [];
+                const assignedItems = qData.items.filter(i => assignedItemIds.includes(i.id));
+
+                return `
+                    <div onclick="clickPlaceCategoryTarget('${cat.id}')" class="bg-slate-950 border-2 ${cat.color} p-3.5 rounded-2xl transition-all cursor-pointer">
+                        <p class="text-xs font-black uppercase tracking-wider mb-2 text-center">${cat.title}</p>
+                        <div class="min-h-[80px] space-y-1.5 border border-slate-800 bg-slate-900/60 rounded-xl p-2">
+                            ${assignedItems.length > 0 ? assignedItems.map(item => `
+                                <div class="bg-slate-950 border border-slate-700 p-2 rounded-lg text-xs font-bold flex items-center justify-between gap-2">
+                                    <span>${item.text}</span>
+                                    <button onclick="event.stopPropagation(); removeCategoryItem('${cat.id}', '${item.id}')" class="text-[10px] text-rose-400 hover:text-rose-200 font-bold px-1.5 py-0.5 rounded bg-rose-950 border border-rose-800">✕</button>
+                                </div>
+                            `).join('') : `<p class="text-[11px] text-slate-500 italic text-center pt-5">Klik item di atas lalu klik kotak ini...</p>`}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = `
+                <div class="bg-slate-950/80 border-2 border-slate-800 p-4 rounded-2xl mb-2">
+                    <span class="text-[11px] font-black uppercase text-amber-400 tracking-wider block mb-1">${qData.title}</span>
+                    <h4 class="text-xs sm:text-sm font-black text-white mb-3 leading-relaxed">${qData.q}</h4>
+
+                    <!-- UNASSIGNED ITEMS -->
+                    <div class="mb-4">
+                        <p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-2">Pernyataan Sikap:</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            ${unassignedItemsHTML || '<p class="text-xs text-emerald-400 font-bold italic col-span-2">Semua pernyataan telah dimasukkan ke dalam wadah! ✨</p>'}
+                        </div>
+                    </div>
+
+                    <!-- CATEGORY WADAH -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        ${categoriesHTML}
+                    </div>
+                </div>
+            `;
+        }
+
+        function clickSelectCategoryItem(itemId) {
+            playSound('click');
+            activeSelectedDragItem = activeSelectedDragItem === itemId ? null : itemId;
+            renderQuizCard();
+        }
+
+        function clickPlaceCategoryTarget(catId) {
+            if (!activeSelectedDragItem) return;
+            playSound('add');
+            if (!quizState.q4[catId]) quizState.q4[catId] = [];
+            
+            // Remove item from any existing category first
+            Object.keys(quizState.q4).forEach(c => {
+                quizState.q4[c] = (quizState.q4[c] || []).filter(id => id !== activeSelectedDragItem);
+            });
+
+            quizState.q4[catId].push(activeSelectedDragItem);
+            activeSelectedDragItem = null;
+            renderQuizCard();
+        }
+
+        function removeCategoryItem(catId, itemId) {
+            playSound('click');
+            if (quizState.q4[catId]) {
+                quizState.q4[catId] = quizState.q4[catId].filter(id => id !== itemId);
+            }
+            renderQuizCard();
+        }
+
+        // QUIZ NAVIGATION
+        function prevQuizQuestion() {
+            if (currentQuizIndex > 0) {
+                playSound('click');
+                currentQuizIndex--;
+                activeSelectedMatchLeft = null;
+                activeSelectedDragItem = null;
+                renderQuizCard();
+            }
+        }
+
+        function nextQuizQuestion() {
+            playSound('click');
+            if (currentQuizIndex < QUIZ_QUESTIONS.length - 1) {
+                currentQuizIndex++;
+                activeSelectedMatchLeft = null;
+                activeSelectedDragItem = null;
+                renderQuizCard();
+            } else {
+                // Calculate final score
+                evaluateFinalQuizScore();
+            }
+        }
+
+        // SCORE CALCULATION & FINAL FEEDBACK SCREEN
+        function evaluateFinalQuizScore() {
+            let score = 0;
+
+            // Q1 (MCQ): 20 pts
+            if (quizState.q1 === QUIZ_QUESTIONS[0].correct) score += 20;
+
+            // Q2 (Drag Drop): 20 pts
+            const q2Assignments = quizState.q2 || {};
+            let q2Correct = 0;
+            QUIZ_QUESTIONS[1].targets.forEach(t => {
+                if (q2Assignments[t.id] === t.correctItem) q2Correct++;
+            });
+            score += Math.round((q2Correct / 3) * 20);
+
+            // Q3 (Matching): 20 pts
+            const q3Assignments = quizState.q3 || {};
+            let q3Correct = 0;
+            QUIZ_QUESTIONS[2].pairsRight.forEach(r => {
+                if (q3Assignments[r.correctLeft] === r.id) q3Correct++;
+            });
+            score += Math.round((q3Correct / 3) * 20);
+
+            // Q4 (Drag Category): 20 pts
+            const q4Assignments = quizState.q4 || {};
+            let q4Correct = 0;
+            QUIZ_QUESTIONS[3].items.forEach(item => {
+                const assignedCat = Object.keys(q4Assignments).find(catId => (q4Assignments[catId] || []).includes(item.id));
+                if (assignedCat === item.targetCategory) q4Correct++;
+            });
+            score += Math.round((q4Correct / 4) * 20);
+
+            // Q5 (MCQ): 20 pts
+            if (quizState.q5 === QUIZ_QUESTIONS[4].correct) score += 20;
+
+            userQuizScore = score;
+            isQuizFinished = true;
+
+            // Update Certificate score
+            const certScoreElem = document.getElementById('cert-score-display');
+            if (certScoreElem) certScoreElem.innerText = `${userQuizScore} / 100 🌟`;
+
+            if (userQuizScore >= 80) {
+                playSound('success');
+            } else {
+                playSound('error');
+            }
+
+            renderQuizCard();
+        }
+
+        // RENDER FINAL SUMMARY FEEDBACK VIEW
+        function renderQuizSummaryResult() {
+            const container = document.getElementById('quiz-card-container');
+            const stepBadge = document.getElementById('quiz-step-badge');
+            const progressBar = document.getElementById('quiz-progress-bar');
+            const footerNav = document.getElementById('quiz-nav-footer');
+
+            stepBadge.innerText = "Hasil Evaluasi Kuis";
+            progressBar.style.width = "100%";
+            footerNav.classList.add('hidden'); // Hide default footer, use dedicated summary action buttons
+
+            const isPassed = userQuizScore >= 80;
+
+            container.innerHTML = `
+                <div class="text-center py-2">
+                    <div class="text-6xl mb-3 animate-bounce">${isPassed ? '🏆' : '⚠️'}</div>
+                    <h3 class="text-xl sm:text-2xl font-black ${isPassed ? 'text-emerald-400' : 'text-amber-400'} mb-1">
+                        ${isPassed ? 'Luar Biasa! Kamu Lulus Kuis Etika AI!' : 'Nilai Belum Mencapai Target Minimum (80)'}
+                    </h3>
+                    <p class="text-xs sm:text-sm text-slate-300 mb-4 max-w-md mx-auto">
+                        ${isPassed 
+                            ? 'Selamat! Kamu berhasil memahami dan menguasai prinsip Etika, Kejujuran (Siddiq), Keadilan (\'Adl), dan Verifikasi (Tabayyun) dalam AI!' 
+                            : 'Nilai standar lulus kuis adalah minimum <b>80/100</b>. Mari ulangi kuis dan perbaiki jawabanmu hingga paham sempurna!'}
+                    </p>
+
+                    <!-- SCORE BADGE -->
+                    <div class="inline-block bg-slate-950 border-2 ${isPassed ? 'border-emerald-500/80' : 'border-amber-400/80'} p-4 rounded-3xl mb-6 shadow-xl">
+                        <p class="text-[10px] uppercase font-black tracking-wider text-slate-400 mb-0.5">Nilai Kuis Kamu:</p>
+                        <p class="text-4xl font-black ${isPassed ? 'text-emerald-300' : 'text-amber-300'}">${userQuizScore} / 100</p>
+                    </div>
+
+                    <!-- DETAILED SUMMARY BREAKDOWN -->
+                    <div class="bg-slate-950/80 border border-slate-800 rounded-2xl p-4 text-left max-w-lg mx-auto mb-6 text-xs space-y-2">
+                        <p class="font-bold text-amber-300 border-b border-slate-800 pb-2">💡 Ringkasan Jawaban Soal Etika:</p>
+                        <p class="text-slate-300"><b>1. Pilihan Ganda:</b> ${quizState.q1 === QUIZ_QUESTIONS[0].correct ? '✅ Benar (+20)' : '❌ Kurang Tepat (0)'}</p>
+                        <p class="text-slate-300"><b>2. Drag & Drop Prinsip:</b> ${userQuizScore >= 40 ? '✅ Benar (+20)' : '⚠️ Parsial/Salah'}</p>
+                        <p class="text-slate-300"><b>3. Menjodohkan Pasangan:</b> Pasangan Etika & Dampak</p>
+                        <p class="text-slate-300"><b>4. Klasifikasi Tindakan:</b> Pengelompokan Etis vs Bias</p>
+                        <p class="text-slate-300"><b>5. Studi Kasus Tabayyun:</b> ${quizState.q5 === QUIZ_QUESTIONS[4].correct ? '✅ Benar (+20)' : '❌ Kurang Tepat (0)'}</p>
+                    </div>
+
+                    <!-- CONDITIONAL ACTION BUTTONS -->
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-md mx-auto">
+                        ${isPassed ? `
+                            <button onclick="hideAdabQuiz()" class="touch-btn btn-game-emerald text-slate-950 font-black px-8 py-3.5 rounded-2xl text-xs sm:text-sm w-full flex items-center justify-center gap-2 shadow-lg">
+                                🏠 Kembali ke Beranda
+                            </button>
+                            <button onclick="showCertModal(); hideAdabQuiz();" class="touch-btn btn-game-amber text-slate-950 font-black px-6 py-3.5 rounded-2xl text-xs sm:text-sm w-full flex items-center justify-center gap-2 shadow-lg">
+                                📜 Lihat Sertifikat
+                            </button>
+                        ` : `
+                            <button onclick="resetQuizState(); renderQuizCard();" class="touch-btn btn-game-amber text-slate-950 font-black px-8 py-3.5 rounded-2xl text-xs sm:text-sm w-full flex items-center justify-center gap-2 shadow-lg animate-pulse">
+                                🔄 Ulangi Kuis (Raih Nilai ≥ 80)
+                            </button>
+                        `}
+                    </div>
+                </div>
+            `;
+        }
+
+        // CERTIFICATE ENGINE
+        function showCertModal() {
+            playSound('click');
+            generateUniqueCertID();
+            document.getElementById('cert-modal').classList.remove('hidden');
+        }
+
+        function hideCertModal() {
+            playSound('click');
+            document.getElementById('cert-modal').classList.add('hidden');
+        }
+
+        function updateCertName(name) {
+            const displayElem = document.getElementById('cert-name-display');
+            if (displayElem) {
+                displayElem.innerText = name.trim() || 'Bintang Detektif Al Azhar';
+            }
+        }
+
+        function generateUniqueCertID() {
+            const randomCode = Math.random().toString(36).substring(2, 6).toUpperCase();
+            const dateStr = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+            
+            document.getElementById('cert-id-display').innerText = `AZ-AIDETECTIVE-${new Date().getFullYear()}-${randomCode}`;
+            document.getElementById('cert-date-display').innerText = `Tanggal: ${dateStr}`;
+        }
+
+        // MODALS CONTROL
+        function showAdabModal() { playSound('click'); document.getElementById('adab-modal').classList.remove('hidden'); }
+        function hideAdabModal() { playSound('click'); document.getElementById('adab-modal').classList.add('hidden'); }
+
+        function showGuideModal() { playSound('click'); document.getElementById('guide-modal').classList.remove('hidden'); }
+        function hideGuideModal() { playSound('click'); document.getElementById('guide-modal').classList.add('hidden'); }
+
+        // INITIALIZE ON WINDOW LOAD
+        window.onload = function() {
+            renderStressTestButtons();
+            drawNNCanvas(true);
+        };
+    </script>
+</body>
+</html>
